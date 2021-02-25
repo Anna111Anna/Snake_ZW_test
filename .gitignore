@@ -2,3 +2,7 @@
 Snake/Library/*
 Snake/Logs/*
 Snake/Temp/*
+Snake/.vs/*
+Snake/Assembly-CSharp.csproj
+Snake/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
+Snake/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
