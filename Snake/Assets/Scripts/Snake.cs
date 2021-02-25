@@ -5,32 +5,63 @@ using System.Linq;
 
 public class Snake : MonoBehaviour
 {
-    Vector2 dir = Vector2.right;
+    [SerializeField] private int startTailCount = 3;
+    [SerializeField] Vector2 dir = Vector2.right;
+    [SerializeField] SpawnFood spawnFood;
 
     List<Transform> tail = new List<Transform>();
 
     bool ate = false;
+    bool isMoved = false;
     public GameObject tailPrefab;
+
 
     void Start()
     {
-        InvokeRepeating("Move", 0.3f, 0.3f);
+        Vector2 v = transform.position;
+
+        while (startTailCount != 0)
+        {
+            GameObject g = (GameObject)Instantiate(tailPrefab, new Vector2(v.x - startTailCount, v.y), Quaternion.identity);
+            tail.Insert(0, g.transform);
+
+            startTailCount--;
+        }
+
+        InvokeRepeating("Move", 0.3f, 0.5f);
+        spawnFood.Spawn(tail);
     }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
-            dir = Vector2.right;
-        else if (Input.GetKey(KeyCode.DownArrow))
-            dir = -Vector2.up;
-        else if (Input.GetKey(KeyCode.LeftArrow))
-            dir = -Vector2.right;
-        else if (Input.GetKey(KeyCode.UpArrow))
-            dir = Vector2.up;
+        if (isMoved)
+        {
+            if (Input.GetKey(KeyCode.RightArrow) && dir != -Vector2.right)
+            {
+                dir = Vector2.right;
+                isMoved = false;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow) && dir != Vector2.up)
+            {
+                dir = -Vector2.up;
+                isMoved = false;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow) && dir != Vector2.right)
+            {
+                dir = -Vector2.right;
+                isMoved = false;
+            }
+            else if (Input.GetKey(KeyCode.UpArrow) && dir != -Vector2.up)
+            {
+                dir = Vector2.up;
+                isMoved = false;
+            }
+        }
     }
 
     void Move()
     {
+        isMoved = true;
         Vector2 v = transform.position;
 
         transform.Translate(dir);
@@ -51,12 +82,12 @@ public class Snake : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D coll)
-    {
-        
-        if (coll.name.StartsWith("FoodPrefab"))
+    {       
+        if (coll.gameObject.tag == "Food")
         {
             ate = true;
             Destroy(coll.gameObject);
+            spawnFood.Spawn(tail);
         }
         else
         {

@@ -13,17 +13,28 @@ public class SpawnFood : MonoBehaviour
     public Transform borderLeft;
     public Transform borderRight;
 
-    void Start()
-    {
-        InvokeRepeating("Spawn", 3, 4);
-    }
-
-    void Spawn()
+    public void Spawn(List<Transform> tail)
     {
         int x = (int)Random.Range(borderLeft.position.x, borderRight.position.x);
         int y = (int)Random.Range(borderBottom.position.y, borderTop.position.y);
 
-        Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity);
+        bool inSnakeBody = false;
+        if (tail != null)
+        {
+            foreach (var t in tail)
+            {
+                if (t.localPosition == new Vector3(x, y, 0))
+                {
+                    inSnakeBody = true;
+                }
+            }
+            if (inSnakeBody == false) 
+                Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity);
+            else 
+                Spawn(tail);
+        }
+        else
+            Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity);
     }
 
 }
