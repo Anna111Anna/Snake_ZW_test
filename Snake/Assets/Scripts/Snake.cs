@@ -5,21 +5,25 @@ using System.Linq;
 
 public class Snake : MonoBehaviour
 {
-    [SerializeField] private int startTailCount = 3;
+    [SerializeField] private int startTailCount = 2;
     [SerializeField] Vector2 dir = Vector2.right;
     [SerializeField] SpawnFood spawnFood;
+    [SerializeField] Points pointsPanel;
+    [SerializeField] GameObject losePanel;
 
     List<Transform> tail = new List<Transform>();
 
     bool ate = false;
     bool isMoved = false;
     public GameObject tailPrefab;
+    
 
 
     void Start()
     {
         Vector2 v = transform.position;
-
+        pointsPanel.BlockCount = startTailCount + 1;
+        pointsPanel.UpdateText();
         while (startTailCount != 0)
         {
             GameObject g = (GameObject)Instantiate(tailPrefab, new Vector2(v.x - startTailCount, v.y), Quaternion.identity);
@@ -88,10 +92,15 @@ public class Snake : MonoBehaviour
             ate = true;
             Destroy(coll.gameObject);
             spawnFood.Spawn(tail);
+
+            pointsPanel.UpdateTextPointPanel();
         }
         else
         {
-            // ToDo 'You lose' screen
+            pointsPanel.BlockCount = startTailCount + 1;
+            pointsPanel.PointCount = 0;
+            CancelInvoke("Move");
+            Instantiate(losePanel, new Vector2(0, 0), Quaternion.identity);
         }
     }
 }
