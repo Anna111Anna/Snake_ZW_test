@@ -5,21 +5,25 @@ using System.Linq;
 
 public class Snake : MonoBehaviour
 {
-    [SerializeField] private int startTailCount = 2;
     [SerializeField] Vector2 dir = Vector2.right;
     [SerializeField] SpawnFood spawnFood;
+
+    [Header("Panels")]
     [SerializeField] Points pointsPanel;
     [SerializeField] GameObject losePanel;
 
+    [Header("Tail")]
+    public GameObject tailPrefab;
+    [SerializeField] private int startTailCount = 2;
     List<Transform> tail = new List<Transform>();
 
-    bool ate = false;
-    bool isMoved = false;
-    public GameObject tailPrefab;
-
+    [Header("Music")]
     [SerializeField] private AudioSource backgroundMusic;
     [SerializeField] private AudioClip ateSound;
     [SerializeField] private AudioClip loseSound;
+
+    bool ate = false;
+    bool isMoved = false;
 
     void Start()
     {

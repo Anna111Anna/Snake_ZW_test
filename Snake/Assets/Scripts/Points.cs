@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class Points : MonoBehaviour
 {
+    [Header("Text")]
     [SerializeField] Text points;
     [SerializeField] Text blocks;
 
+    [Header("Counts")]
     private int blockCount;
     private int pointCount;
 
@@ -16,6 +18,7 @@ public class Points : MonoBehaviour
         get { return blockCount; } 
         set { blockCount = value; }
     }
+
     public int PointCount
     {
         get { return pointCount; }
@@ -35,13 +38,4 @@ public class Points : MonoBehaviour
         points.text = pointCount.ToString();
         blocks.text = blockCount.ToString();
     }
-
-    public void Restart()
-    {
-        points.text = "0";
-        blocks.text = "0";
-        blockCount = 0;
-        pointCount = 0;
-    }
-
 }
