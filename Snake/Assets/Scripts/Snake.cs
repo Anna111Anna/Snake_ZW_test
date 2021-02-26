@@ -16,8 +16,10 @@ public class Snake : MonoBehaviour
     bool ate = false;
     bool isMoved = false;
     public GameObject tailPrefab;
-    
 
+    [SerializeField] private AudioSource backgroundMusic;
+    [SerializeField] private AudioClip ateSound;
+    [SerializeField] private AudioClip loseSound;
 
     void Start()
     {
@@ -33,6 +35,14 @@ public class Snake : MonoBehaviour
         }
 
         InvokeRepeating("Move", 0.3f, 0.5f);
+        Invoke("FirstSpawnFood", 1.5f);
+
+        GetComponent<AudioSource>().Play();
+        backgroundMusic.Play();
+    }
+
+    private void FirstSpawnFood()
+    {
         spawnFood.Spawn(tail);
     }
 
@@ -89,6 +99,7 @@ public class Snake : MonoBehaviour
     {       
         if (coll.gameObject.tag == "Food")
         {
+            GetComponent<AudioSource>().PlayOneShot(ateSound);
             ate = true;
             Destroy(coll.gameObject);
             spawnFood.Spawn(tail);
@@ -97,6 +108,8 @@ public class Snake : MonoBehaviour
         }
         else
         {
+            backgroundMusic.Stop();
+            GetComponent<AudioSource>().PlayOneShot(loseSound);
             pointsPanel.BlockCount = startTailCount + 1;
             pointsPanel.PointCount = 0;
             CancelInvoke("Move");
